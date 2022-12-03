@@ -1,10 +1,8 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import {legacy_createStore as createStore} from 'redux'
+import {useStore, useDispatch, useSelector} from 'react-redux'
 import noteReducer, { createNote, deleteNote, toggleImportantNote } from './store/noteReducer'
 import styled from 'styled-components'
-
-export const store = createStore(noteReducer, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__())
 
 store.dispatch({
   type:'CREATE_NOTE',
@@ -36,7 +34,11 @@ const Ul = styled.ul`
 `
 
 function App() {
-  const state = store.getState()
+  //const store = useStore()
+  //const state = store.getState()
+
+  const state = useSelector(state => state)
+  const dispatch = useDispatch()
 
   const toggleImportant = (id) => {
     store.dispatch(toggleImportantNote(id))
