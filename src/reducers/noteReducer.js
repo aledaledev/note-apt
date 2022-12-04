@@ -1,4 +1,22 @@
-const noteReducer = (state = [], action) => {
+const initialState = [
+  {
+    content: "Play computer games",
+    important: true,
+    id: '12ear2a21e',
+  },
+  {
+    content: "Play guitar",
+    important: true,
+    id: '214acaw5ar'
+  },
+  {
+    content: "Play piano",
+    important: false,
+    id: '67sa2412xv'
+  }
+]
+
+const noteReducer = (state = initialState, action) => {
   if (action.type === "CREATE_NOTE") {
     //state.push(action.payload) ojo no mutar
     //return state.concat(action.payload);

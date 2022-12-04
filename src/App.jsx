@@ -24,9 +24,22 @@ import Notes from "./components/Notes";
 function App() {
   //const store = useStore()
   //const state = store.getState()
-  return (
+
+  const filterSelected = value => {
+    console.log(value);
+  }
+
+  return(
     <div className="App">
       <NoteForm />
+      <div>
+        all
+        <input type="radio" name="filter" onChange={() => filterSelected('ALL')}/>
+        important
+        <input type="radio" name="filter" onChange={() => filterSelected('IMPORTANT')}/>
+        no important
+        <input type="radio" name="filter" onChange={() => filterSelected('NO_IMPORTANT')}/>
+      </div>
       <Notes/>
     </div>
   );
