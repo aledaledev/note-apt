@@ -1,80 +1,35 @@
-import React from 'react'
-import ReactDOM from 'react-dom'
-import {useStore, useDispatch, useSelector} from 'react-redux'
-import noteReducer, { createNote, deleteNote, toggleImportantNote } from './store/noteReducer'
-import styled from 'styled-components'
+import React from "react";
+import ReactDOM from "react-dom";
+import NoteForm from "./components/NoteForm";
+import Notes from "./components/Notes";
 
-store.dispatch({
-  type:'CREATE_NOTE',
-  payload: {
-    content:'Play computer games',
-    important: true,
-    id:1
-  }
-})
+/*dispatch({
+    type: "CREATE_NOTE",
+    payload: {
+      content: "Play computer games",
+      important: true,
+      id: 1,
+    },
+  });
 
-store.dispatch({
-  type:'CREATE_NOTE',
-  payload: {
-    content:'Cook',
-    important: false,
-    id:2
-  }
-})
-
-const Li = styled.li`
-  padding: 1rem;
-  border: 1px solid #eee;
-  list-style: none;
-`
-
-const Ul = styled.ul`
-  display: flex;
-  gap: .5rem;
-`
+  dispatch({
+    type: "CREATE_NOTE",
+    payload: {
+      content: "Cook",
+      important: false,
+      id: 2,
+    },
+  });*/
 
 function App() {
   //const store = useStore()
   //const state = store.getState()
-
-  const state = useSelector(state => state)
-  const dispatch = useDispatch()
-
-  const toggleImportant = (id) => {
-    store.dispatch(toggleImportantNote(id))
-  }
-
-  const handleDelete = (id) => {
-    store.dispatch(deleteNote(id))
-  }
-
-  const addNote = (e) => {
-    e.preventDefault()
-    const {note} = e.target
-    e.target.value = ''
-    store.dispatch(createNote(note.value))
-  }
-
   return (
     <div className="App">
-      <div>
-        <form onSubmit={addNote} >
-          <input type="text" name='note'/>
-          <button>create</button>
-        </form>
-      </div>
-      <Ul>
-      {state.map(({content,important,id}) => 
-        <Li key={id}>
-          <h3>{content}</h3>
-          <p>{important?'important':'not important'}</p>
-          <button onClick={() => toggleImportant(id)}>change importance</button>
-          <button onClick={() => handleDelete(id)}>delete</button>
-        </Li>
-      )}
-      </Ul>
+      <NoteForm />
+      <Notes/>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
