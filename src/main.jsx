@@ -3,14 +3,12 @@ import ReactDOM from 'react-dom/client'
 import {Provider} from 'react-redux'
 import {legacy_createStore as createStore, combineReducers} from 'redux'
 import App from './App'
-import filterReducer from './reducers/filterReducer'
 import noteReducer from './reducers/noteReducer'
 import {composeWithDevTools} from 'redux-devtools-extension'
 
 //combinamos reducers
 const reducers = combineReducers({
   notes:noteReducer,
-  filter: filterReducer
 })
 
 const store = createStore(reducers, composeWithDevTools())
@@ -18,7 +16,7 @@ const store = createStore(reducers, composeWithDevTools())
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <Provider store={store}>
-    <App />
+      <App />
     </Provider>
   </React.StrictMode>
 )

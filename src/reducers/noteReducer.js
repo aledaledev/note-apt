@@ -1,4 +1,4 @@
-const initialState = [
+const initialNotes = [
   {
     content: "Play computer games",
     important: true,
@@ -16,29 +16,55 @@ const initialState = [
   }
 ]
 
+const initialState = {
+  notes:initialNotes,
+  filteredNotes:initialNotes
+}
+
 const noteReducer = (state = initialState, action) => {
-  if (action.type === "CREATE_NOTE") {
-    //state.push(action.payload) ojo no mutar
-    //return state.concat(action.payload);
-    return [...state, action.payload]
+  switch(action.type){
+    case "CREATE_NOTE": {
+      //state.push(action.payload) ojo no mutar
+      //return state.concat(action.payload);
+      return {...state, notes:[...state.notes, action.payload],filteredNotes:[...state.notes, action.payload] }
+    }
+
+    case "TOGGLE_IMPORTANT":{
+      const {id} = action.payload
+
+      const currentNotes = state.filteredNotes.map(note => {
+          if(note.id === id) {
+              return {
+                  ...note,
+                  important:!note.important
+              }
+          }
+          return note
+      }) 
+
+      return {...state,notes:currentNotes ,filteredNotes:currentNotes}
+    }
+
+    case "DELETE_NOTE":{
+      const {id} = action.payload
+      const currentNotes = state.filteredNotes.filter(note => note.id !== id)
+      return {...state, notes:currentNotes,filteredNotes:currentNotes}
+    }
+
+    case 'FILTER_ALL':{
+      return {...state, filteredNotes:state.notes}
+    }
+
+    case "FILTER_IMPORTANT":{
+      return {...state, filteredNotes:state.notes.filter(note => note.important)}
+    }
+
+    case 'FILTER_NO_IMPORTANT':{
+      return {...state, filteredNotes:state.notes.filter(note => !note.important)}
+    }
+
+    default: return state
   }
-  if(action.type === "TOGGLE_IMPORTANT"){
-    const {id} = action.payload
-    return state.map(note => {
-        if(note.id === id) {
-            return {
-                ...note,
-                important:!note.important
-            }
-        }
-         return note
-    })
-  }
-  if(action.type === "DELETE_NOTE"){
-    const {id} = action.payload
-    return state.filter(note => note.id !== id)
-  }
-  return state;
 };
 
 //actionCreator
@@ -46,7 +72,7 @@ export const createNote = content => {
   return {
     type:'CREATE_NOTE',
     payload: {
-      content: content,
+      content,
       important: false,
       id: Math.floor(Math.random()*99999)
     }
@@ -68,6 +94,24 @@ export const toggleImportantNote = id => {
     payload: {
       id
     }
+  }
+}
+
+export const filterAll = () => {
+  return {
+    type: 'FILTER_ALL'
+  }
+}
+
+export const filterImportant = () => {
+  return {
+    type: 'FILTER_IMPORTANT'
+  }
+}
+
+export const filterNoImportant = () => {
+  return {
+    type: 'FILTER_NO_IMPORTANT'
   }
 }
 
