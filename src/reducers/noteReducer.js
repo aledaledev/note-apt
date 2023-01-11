@@ -1,5 +1,5 @@
 import {v4 as uuid} from 'uuid'
-import { changeImportance, createNewNote, deleteFromServer, getNotes } from '../service/notes';
+import { changeImportance, createNewNote, deleteFromServer, getNotes, updateServerNote } from '../service/notes';
 
 /*const initialNotes = [
   {
@@ -21,7 +21,8 @@ import { changeImportance, createNewNote, deleteFromServer, getNotes } from '../
 
 const initialState = {
   notes:[],
-  filteredNotes:[]
+  filteredNotes:[],
+  editNoteId:''
 }
 
 const noteReducer = (state = initialState, action) => {
@@ -70,6 +71,19 @@ const noteReducer = (state = initialState, action) => {
       return {...state, filteredNotes:state.notes.filter(note => !note.important)}
     }
 
+    case "EDIT_NOTE":{
+      const {id} = action.payload
+      return {...state, editNoteId: id}
+    }
+
+    case 'UPDATE_NOTE':{
+      const {id,content} = action.payload.note
+      const index = state.filteredNotes.findIndex((note) => note.id === id)
+      const updateMap = [...state.filteredNotes]
+      updateMap[index] = {...updateMap[index], content}
+      return {...state, filteredNotes:updateMap}
+    }
+
     default: return state
   }
 };
@@ -106,7 +120,7 @@ export const deleteNote = id => {
 
 export const toggleImportantNote = note => {
   return async dispatch => {
-    changeImportance({...note, important:!important})
+    changeImportance({...note, important:!note.important})
 
     dispatch({
       type:'TOGGLE_IMPORTANT',
@@ -115,8 +129,28 @@ export const toggleImportantNote = note => {
       }
     })
   }
+}
 
+export const editNote = (id) => {
+  return {
+    type: 'EDIT_NOTE',
+    payload: {
+      id
+    }
+  }
+}
 
+export const updateNote = (note) => {
+  return async dispatch => {
+    updateServerNote(note)
+
+    dispatch({
+      type:'UPDATE_NOTE',
+      payload:{
+        note
+      }
+    })
+  }
 }
 
 export const filterAll = () => {

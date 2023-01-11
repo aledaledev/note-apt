@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import EditNote from "./components/EditNote";
 import Filters from "./components/Filters";
 import NoteForm from "./components/NoteForm";
 import Notes from "./components/Notes";
@@ -8,6 +9,7 @@ import { initNotes } from "./reducers/noteReducer";
 function App() {
 
   const dispatch = useDispatch()
+  const notes = useSelector(state => state.notes)
 
   useEffect(() => {
     dispatch(initNotes())
@@ -18,6 +20,7 @@ function App() {
       <NoteForm />
       <Filters/>
       <Notes/>
+      {notes.editNoteId!==''?<EditNote/>:null}
     </div>
   );
 }

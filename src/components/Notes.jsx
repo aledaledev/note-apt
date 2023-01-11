@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { deleteNote, toggleImportantNote } from '../reducers/noteReducer'
+import { deleteNote, editNote, toggleImportantNote } from '../reducers/noteReducer'
 import { useDispatch, useSelector } from 'react-redux'
 
 const Li = styled.li`
@@ -14,7 +14,6 @@ const Ul = styled.ul`
   gap: .5rem;
 `
 
-
 const Note = () => {
 
   //seleccionar una parte del estado(que es un objeto)
@@ -24,15 +23,14 @@ const Note = () => {
   return (
 
     <Ul>
-
     {notes.filteredNotes.map(({content,important,id}) => 
       <Li key={id}>
         <h3>{content}</h3>
         <p>{important?'important':'not important'}</p>
         <button onClick={() => dispatch(toggleImportantNote({content,important,id}))}>change importance</button>
         <button onClick={() => dispatch(deleteNote(id))}>delete</button>
+        <button onClick={() => dispatch(editNote(id))}>edit</button>
       </Li>)}
-
     </Ul>    
   )
 }
