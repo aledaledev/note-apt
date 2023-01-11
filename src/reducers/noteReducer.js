@@ -1,3 +1,5 @@
+import {v4 as uuid} from 'uuid'
+
 const initialNotes = [
   {
     content: "Play computer games",
@@ -74,7 +76,7 @@ export const createNote = content => {
     payload: {
       content,
       important: false,
-      id: Math.floor(Math.random()*99999)
+      id: uuid()
     }
   }
 }
