@@ -29,7 +29,7 @@ const Note = () => {
       <Li key={id}>
         <h3>{content}</h3>
         <p>{important?'important':'not important'}</p>
-        <button onClick={() => dispatch(toggleImportantNote(id))}>change importance</button>
+        <button onClick={() => dispatch(toggleImportantNote({content,important,id}))}>change importance</button>
         <button onClick={() => dispatch(deleteNote(id))}>delete</button>
       </Li>)}
 

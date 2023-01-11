@@ -6,11 +6,13 @@ const NoteForm = () => {
 
   const dispatch = useDispatch()  
 
-  const addNote = (e) => {
+  const addNote = async (e) => {
     e.preventDefault()
     const {note} = e.target
-    e.target.value = ''
-    dispatch(createNote(note.value))
+    const content = note.value
+    note.value = ''
+
+    dispatch(createNote(content))
   }
 
   return (

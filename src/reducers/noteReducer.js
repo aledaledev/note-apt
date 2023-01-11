@@ -1,6 +1,7 @@
 import {v4 as uuid} from 'uuid'
+import { changeImportance, createNewNote, deleteFromServer, getNotes } from '../service/notes';
 
-const initialNotes = [
+/*const initialNotes = [
   {
     content: "Play computer games",
     important: true,
@@ -16,15 +17,20 @@ const initialNotes = [
     important: false,
     id: '67sa2412xv'
   }
-]
+]*/
 
 const initialState = {
-  notes:initialNotes,
-  filteredNotes:initialNotes
+  notes:[],
+  filteredNotes:[]
 }
 
 const noteReducer = (state = initialState, action) => {
   switch(action.type){
+
+    case "INIT_NOTES":{
+      return {...state, notes:action.payload,filteredNotes:action.payload}
+    }
+
     case "CREATE_NOTE": {
       //state.push(action.payload) ojo no mutar
       //return state.concat(action.payload);
@@ -33,7 +39,6 @@ const noteReducer = (state = initialState, action) => {
 
     case "TOGGLE_IMPORTANT":{
       const {id} = action.payload
-
       const currentNotes = state.filteredNotes.map(note => {
           if(note.id === id) {
               return {
@@ -70,33 +75,48 @@ const noteReducer = (state = initialState, action) => {
 };
 
 //actionCreator
+
+//debe ser lo mas agnostico posible de donde se estan extrayendo los datos
+//menos logica del negocio dejando solo logica del estado de la app
 export const createNote = content => {
-  return {
-    type:'CREATE_NOTE',
-    payload: {
-      content,
-      important: false,
-      id: uuid()
-    }
+  return async dispatch => {
+    //crea note en el servidor
+    const newNote = await createNewNote(content)
+    
+    //crea note para que se vea frontend
+    dispatch({
+      type:'CREATE_NOTE',
+      payload: newNote
+    })
   }
 }
 
 export const deleteNote = id => {
-  return {
-    type:'DELETE_NOTE',
-    payload: {
-      id
-    }
+  return async dispatch => {
+    deleteFromServer(id)
+
+    dispatch({
+      type:'DELETE_NOTE',
+      payload: {
+        id
+      }
+    })
   }
 }
 
-export const toggleImportantNote = id => {
-  return {
-    type:'TOGGLE_IMPORTANT',
-    payload: {
-      id
-    }
+export const toggleImportantNote = note => {
+  return async dispatch => {
+    changeImportance({...note, important:!important})
+
+    dispatch({
+      type:'TOGGLE_IMPORTANT',
+      payload: {
+        id:note.id
+      }
+    })
   }
+
+
 }
 
 export const filterAll = () => {
@@ -117,5 +137,17 @@ export const filterNoImportant = () => {
   }
 }
 
+//usando thunk para acciones asincronas
+export const initNotes = () => {
+  return async dispatch => {
+    const notes = await getNotes()
+
+    dispatch({
+      type:'INIT_NOTES',
+      payload:notes
+    })
+  }
+  
+}
 
 export default noteReducer;
